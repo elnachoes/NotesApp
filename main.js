@@ -1,35 +1,43 @@
-//OVERVIEW: this is a learning app I wrote to learn Node.js
-//NOTE: see udemy course for instructions on this app 
+//OVERVIEW: This is a commandline app I wrote  while taking a udemy course 
+//to learn npm package management and json manipulation
+
+//NOTE: See udemy course for instructions on this app 
 //@: https://www.udemy.com/course/the-complete-nodejs-developer-course-2/learn/lecture/13728884#overview
 
-//npm packages
+//---- npm packages ----//
 const validator = require('validator'); //for validating stuff
 const chalk = require('chalk');         //for customizing text fonts and colors
 const yargs = require('yargs');         //for dealing argv commands and parameters
 
-//other scripts
+//---- notes managing script ----//
 const notes = require('./notes.js');
 
 //---- chalk styles ----//
-const chalkTitle = chalk.keyword('red');
-const chalkBody = chalk.keyword('yellow');
+//FG is foreground color and BG is background color
+const chalkTitleFG = chalk.keyword('orange');
+const chalkBodyFG = chalk.keyword('yellow');
+const chalkCommandFG = chalk.keyword("red");
 const chalkNoteBG = chalk.bgBlue;
 const chalkCommandBG = chalk.bgGreen;
 const chalkErrorBG = chalk.bgRed;
 
 
-//---- yargs builder objects ----//
+//---- yargs command builders  ----//
 
+//command builder (unique to yargs)
 //used for parsing the argv arguments (see below: yargs commands)
-const builderTitle = {      //command builder (unique to yargs)
-    title: {
-        describe: 'Note Title',
-        demandOption: true,
-        type: 'string'
+//this command builder only requires a title arg
+const builderTitle = {      
+    title: {                        //command argument name
+        describe: 'Note Title',     //command argument description 
+        demandOption: true,         //command argument true if manditory argument else optional argument
+        type: 'string'              //command argument value type
     },
 };
 
+//this command builder requires a title arg and a body arg
 const builderTitleBody = {
+    //I reused the builderTitle command builder inside the builderTitleBody command builder
     builderTitle,
     body: {
         describe: 'Note Body',
@@ -48,7 +56,7 @@ yargs.command({
     describe: 'add a new note',     //command description
     builder: builderTitleBody,      //command builder object for parsing argv parameters (see above: yargs builder objects)
     handler: (argv) => {            //function used
-        console.log(chalkCommandBG('command : addNote'));
+        console.log(chalkCommandBG(chalkCommandFG('command : addNote')));
         notes.addNote(argv.title, argv.body);
     }
 });
@@ -59,7 +67,7 @@ yargs.command({
     describe: 'removes a note',
     builder: builderTitle,
     handler: (argv) => {
-        console.log(chalkCommandBG('command : removeNote'));
+        console.log(chalkCommandBG(chalkCommandFG('command : removeNote')));
         notes.removeNote(argv.title);
     }
 });
@@ -71,10 +79,11 @@ yargs.command({
     builder: builderTitle,
     handler: (argv) => {
         try {
-            console.log(chalkCommandBG('command : readNote'));
+            console.log(chalkCommandBG(chalkCommandFG('command : readNote')));
             const note = notes.getNote(argv.title);
-            console.log(chalkNoteBG(`\n---- ${chalkTitle(note.title)} : ${chalkBody(note.body)} ----`));
-        } catch (error) {
+            console.log(chalkNoteBG(`\n---- ${chalkTitleFG(note.title)} : ${chalkBodyFG(note.body)} ----`));
+        } 
+        catch (error) {
             console.log(chalkErrorBG(`\nno note with the title "${argv.title}"`));
         }
     }
@@ -85,10 +94,10 @@ yargs.command({
     command: 'listNotes',
     describe: 'lists notes',
     handler: (params) => {
-        console.log(chalkCommandBG('command : listNotes'));
+        console.log(chalkCommandBG(chalkCommandFG('command : listNotes')));
         const notesList = notes.loadNotes();
         notesList.forEach((element) => {
-            console.log(chalkNoteBG(`\n---- ${chalkTitle(element.title)} : ${chalkBody(element.body)} ----`));
+            console.log(chalkNoteBG(`\n---- ${chalkTitleFG(element.title)} : ${chalkBodyFG(element.body)} ----`));
         });
     }
 });

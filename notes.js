@@ -1,27 +1,31 @@
-//core modules 
+//OVERVIEW: This is a script that manages reading and writing to the notes.json file
+//which stores the notes that the user inputs.
+
+//---- core node modules ----//
 const fs = require('fs');
 
-//npm packages
+//---- npm packages ----//
 const chalk = require('chalk');
 
-//chalk styles
-const error = chalk.bgRed;
-const success = chalk.bgGreen;
+//---- chalk styles ----//
+const errorFG = chalk.bgRed;
+const successFG = chalk.bgGreen;
 
 //returns an Array of Objects 
 const loadNotes = (params) => {
     try {
         const dataBuffer = fs.readFileSync('notes.json');
         return JSON.parse(dataBuffer.toString());
-    } catch (error) {
-        return []
+    } 
+    catch (errorFG) {
+        return [];
     }
 };
 
 //returns note within the loadNotes() Array given title of note
 const getNote = (title) => {
     const notes = loadNotes();
-    let note
+    let note;
     notes.forEach((element) => {
         if (element.title === title) {
             note = element;
@@ -44,7 +48,8 @@ function addNote(title, body) {
         });
         saveNotes(notes);
         console.log('note saved');
-    } else {
+    } 
+    else {
         console.log('note is already saved');
     }
 }
@@ -56,9 +61,10 @@ function removeNote(title) {
         return note.title !== title;
     });
     if (keepNotes === loadNotes) {
-        console.log(error(`no note with the title "${title}"`));
-    } else {
-        console.log(success(`note with the title "${title}" removed`));
+        console.log(errorFG(`no note with the title : "${title}"`));
+    } 
+    else {
+        console.log(successFG(`note with the title : "${title}" removed`));
     }
     saveNotes(keepNotes);
 };
@@ -69,7 +75,7 @@ function saveNotes(notes) {
     fs.writeFileSync('notes.json', dataJSON);
 }
 
-//exporting of functions
+//---- Exported Functions ----//
 module.exports = {
     getNote: getNote,
     addNote: addNote,
