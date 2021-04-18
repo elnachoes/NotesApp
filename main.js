@@ -26,6 +26,7 @@ const chalkErrorBG = chalk.bgRed;
 
 //command builder (unique to yargs)
 //used for parsing the argv arguments (see below: yargs commands)
+
 //this command builder only requires a title arg
 const builderTitle = {      
     title: {                        //command argument name
@@ -48,9 +49,10 @@ const builderTitleBody = {
 
 //---- yargs commands ----//
 
-//addNote command adds a note given title and body
 //NOTE: to use this command you have to type this in WHEN you launch the program like ' node main.js addNote --title="asdf" --body="asdf" '
 //IMPORTANT: (argv) is the parameters input when launching the app : ' --title="asdf" --body="asdf" ' 
+
+//addNote command adds a note given title and body
 yargs.command({
     command: 'addNote',             //command name
     describe: 'add a new note',     //command description
@@ -95,10 +97,7 @@ yargs.command({
     describe: 'lists notes',
     handler: (params) => {
         console.log(chalkCommandBG(chalkCommandFG('command : listNotes')));
-        const notesList = notes.loadNotes();
-        notesList.forEach((element) => {
-            console.log(chalkNoteBG(`\n---- ${chalkTitleFG(element.title)} : ${chalkBodyFG(element.body)} ----`));
-        });
+        notes.listNotes();
     }
 });
 

@@ -8,8 +8,11 @@ const fs = require('fs');
 const chalk = require('chalk');
 
 //---- chalk styles ----//
-const errorFG = chalk.bgRed;
-const successFG = chalk.bgGreen;
+const chalkErrorFG = chalk.bgRed;
+const chalkSuccessFG = chalk.bgGreen;
+const chalkNoteBG = chalk.bgBlue;
+const chalkTitleFG = chalk.keyword('orange');
+const chalkBodyFG = chalk.keyword('yellow');
 
 //returns an Array of Objects 
 const loadNotes = (params) => {
@@ -60,13 +63,20 @@ function removeNote(title) {
     const keepNotes = notes.filter((note) => {
         return note.title !== title;
     });
-    if (keepNotes === loadNotes) {
-        console.log(errorFG(`no note with the title : "${title}"`));
+    if (notes.length > keepNotes.length) {
+        console.log(chalkSuccessFG(`note with the title : "${title}" removed`));
+        saveNotes(keepNotes);
     } 
     else {
-        console.log(successFG(`note with the title : "${title}" removed`));
+        console.log(chalkErrorFG(`no note with the title : "${title}"`));
     }
-    saveNotes(keepNotes);
+};
+
+const listNotes = (params) => {
+    const notes = loadNotes();
+    notes.forEach((element) => {
+        console.log(chalkNoteBG(`\n---- ${chalkTitleFG(element.title)} : ${chalkBodyFG(element.body)} ----`));
+    });
 };
 
 //saves notes to notes.json
@@ -77,9 +87,10 @@ function saveNotes(notes) {
 
 //---- Exported Functions ----//
 module.exports = {
-    getNote: getNote,
-    addNote: addNote,
-    removeNote: removeNote,
-    loadNotes: loadNotes
+    getNote : getNote,
+    addNote : addNote,
+    removeNote : removeNote,
+    loadNotes : loadNotes,
+    listNotes : listNotes
 }
 
